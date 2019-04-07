@@ -68,19 +68,35 @@ public class MainViewModel extends ViewModel {
     }
 
     public void removeExpense(int id) {
-        Expense expense;
+        Expense expense = null;
         for(int i = 0; i < mExpenseList.size(); i++){
             expense = mExpenseList.get(i);
             if (expense.getId() == id) {
-                mExpenseList.remove(expense);
+
                 break;
             }
         }
+
+        expense.getmCategory().setmSum(expense.getmCategory().getmSum() - expense.getmPrice());
+        mCategoryLiveData.setValue(mCategoryList);
+
+//        Category category = new Category(expense.getmCategory().getmId(), expense.getName());
+//        category.setmSum(expense.getmCategory().getmSum() - expense.getmPrice());
+//        addCategory(category);
+//        removeCategory(expense.getmCategory());
+//        mCategoryLiveData.setValue(mCategoryList);
+
+        mExpenseList.remove(expense);
         mExpensesLiveData.setValue(mExpenseList);
     }
 
     public void addCategory(Category category) {
         mCategoryList.add(category);
+        mCategoryLiveData.setValue(mCategoryList);
+    }
+
+    public void removeCategory(Category category) {
+        mCategoryList.remove(category);
         mCategoryLiveData.setValue(mCategoryList);
     }
 

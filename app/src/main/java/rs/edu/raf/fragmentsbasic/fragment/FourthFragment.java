@@ -55,7 +55,7 @@ public class FourthFragment extends Fragment {
             }
         });
 
-        RecyclerView recycler = view.findViewById(R.id.rv_category_list);
+        RecyclerView recycler = view.findViewById(R.id.rv_category_list_fourth);
         LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
         recycler.setLayoutManager(manager);
         mAdapter = new CategoryAdapter();
@@ -74,7 +74,7 @@ public class FourthFragment extends Fragment {
                     @Override
                     public void onChanged(List<Category> categories) {
                         mAdapter.setData(categories);
-                        Toast.makeText(FourthFragment.this.getContext(), categories.size()+"", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FourthFragment.this.getContext(), "UPDATED 4", Toast.LENGTH_SHORT).show();
                     }
                 });
 

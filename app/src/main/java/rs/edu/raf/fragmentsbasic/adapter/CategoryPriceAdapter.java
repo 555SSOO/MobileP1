@@ -15,27 +15,27 @@ import rs.edu.raf.fragmentsbasic.R;
 import rs.edu.raf.fragmentsbasic.model.Category;
 import rs.edu.raf.fragmentsbasic.util.CategoryDiffCallback;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
+public class CategoryPriceAdapter extends RecyclerView.Adapter<CategoryPriceAdapter.CategoryPriceHolder> {
 
     private List<Category> mDataSet;
 
-    public CategoryAdapter() {
+    public CategoryPriceAdapter() {
         mDataSet = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryPriceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.category_list_item, parent, false);
-        return new CategoryHolder(view);
+        return new CategoryPriceHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoryPriceHolder holder, int position) {
         Category category = mDataSet.get(position);
         holder.text.setText(category.getmName());
-//        holder.price.setText(category.getmSum().toString());
+        holder.price.setText(category.getmSum().toString());
     }
 
     @Override
@@ -51,15 +51,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         result.dispatchUpdatesTo(this);
     }
 
-    public class CategoryHolder extends RecyclerView.ViewHolder {
+    public class CategoryPriceHolder extends RecyclerView.ViewHolder {
 
         TextView text;
-//        TextView price;
+        TextView price;
 
-        public CategoryHolder(@NonNull View itemView) {
+        public CategoryPriceHolder(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.tv_category_list_item);
-//            price = itemView.findViewById(R.id.tv_category_price_list_item);
+            price = itemView.findViewById(R.id.tv_category_price_list_item);
         }
     }
 }

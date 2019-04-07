@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_fragment_first_content"
+        android:id="@+id/tv_fragment_fourth_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_category"
@@ -30,7 +30,7 @@
         android:layout_marginBottom="20dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_category_list"
+        android:id="@+id/rv_category_list_fourth"
         android:layout_width="match_parent"
         android:layout_height="300dp"/>
 
