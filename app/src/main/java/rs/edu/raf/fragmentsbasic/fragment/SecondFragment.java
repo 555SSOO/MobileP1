@@ -1,11 +1,16 @@
 package rs.edu.raf.fragmentsbasic.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.List;
@@ -15,17 +20,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import rs.edu.raf.fragmentsbasic.R;
+import rs.edu.raf.fragmentsbasic.activity.DetailActivity;
 import rs.edu.raf.fragmentsbasic.adapter.ExpenseAdapter;
+import rs.edu.raf.fragmentsbasic.model.Category;
 import rs.edu.raf.fragmentsbasic.model.Expense;
 import rs.edu.raf.fragmentsbasic.viewmodel.MainViewModel;
+
 
 public class SecondFragment extends Fragment {
 
     private MainViewModel viewModel;
     private ExpenseAdapter mExpenseAdapter;
+    private Spinner mCategorySpinner;
 
     public static SecondFragment newInstance() {
         return new SecondFragment();
@@ -38,23 +47,47 @@ public class SecondFragment extends Fragment {
 
         EditText editText = view.findViewById(R.id.et_fragment_second_filter);
         Button button = view.findViewById(R.id.btn_fragment_second);
+        mCategorySpinner = view.findViewById(R.id.sp_fragment_second_category);;
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String filter = editText.getText().toString();
+                viewModel.setFilter(filter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String filter = editText.getText().toString();
-                viewModel.setFilter(filter);
+                viewModel.setCategoryFilter((Category) mCategorySpinner.getSelectedItem());
             }
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_second);
-        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
+        recyclerView.setLayoutManager(manager);
         mExpenseAdapter = new ExpenseAdapter();
 
         mExpenseAdapter.setOnImageClickCallback(new ExpenseAdapter.OnImageClickCallback() {
             @Override
-            public void onImageClick() {
+            public void onImageClick(int position) {
+
+                Intent intent = new Intent(SecondFragment.this.getContext(), DetailActivity.class);
+                intent.putExtra("id", position);
+                startActivity(intent);
+
+
                 Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
             }
         });
@@ -82,6 +115,16 @@ public class SecondFragment extends Fragment {
                     public void onChanged(List<Expense> expenses) {
                         mExpenseAdapter.setData(expenses);
                     }
+                });
+
+        viewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(),
+                categories -> {
+                    // Init spinner array over all categories
+                    ArrayAdapter<Category> adapter =
+                            new ArrayAdapter<>(SecondFragment.this.getContext(), android.R.layout.simple_spinner_dropdown_item, categories);
+                    adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+
+                    mCategorySpinner.setAdapter(adapter);
                 });
     }
 }

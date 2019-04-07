@@ -9,32 +9,17 @@
         android:id="@+id/tv_fragment_first_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/first_fragment"
+        android:text="@string/add_category"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
 
     <EditText
-        android:id="@+id/et_fragment_first_name"
+        android:id="@+id/et_category_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:hint="@string/expense_name"/>
-
-    <EditText
-        android:id="@+id/et_fragment_first_price"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:hint="@string/expense_price"/>
-
-    <Spinner
-        android:id="@+id/sp_fragment_first_category"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:hint="@string/category_name"/>
 
     <Button
         android:id="@+id/btn_fragmnet_first_add"
@@ -43,5 +28,10 @@
         android:text="@string/add"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_category_list"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
 
 </LinearLayout>

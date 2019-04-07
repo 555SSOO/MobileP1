@@ -18,8 +18,6 @@ import rs.edu.raf.fragmentsbasic.fragment.ThirdFragment;
 public class SimplePagerAdapter extends FragmentPagerAdapter {
 
     private static final int FRAGMENT_COUNT = 4;
-    public static final int FRAGMENT_TEXT = 0;
-    public static final int FRAGMENT_CHOICE = 1;
 
     private List<String> mTitles;
 
@@ -34,7 +32,7 @@ public class SimplePagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return FirstFragment.newInstance("IZ ADAPTERA");
+                return FirstFragment.newInstance();
             case 1:
                 return SecondFragment.newInstance();
             case 2:

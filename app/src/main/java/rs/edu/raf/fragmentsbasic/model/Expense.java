@@ -1,23 +1,21 @@
 package rs.edu.raf.fragmentsbasic.model;
 
+import java.util.Date;
+
 public class Expense {
 
     private int mId;
     private String mName;
     private Double mPrice;
-    private String mImageUrl;
     private Category mCategory;
+    private Date mDate;
 
     public Expense(int id, String name, Double price, Category category) {
-        this(id, name, price, "https://picsum.photos/200/300?image=" + id % 100, category);
-    }
-
-    public Expense(int id, String name, Double price, String imageUrl, Category category) {
         mId = id;
         mName = name;
         mPrice = price;
-        mImageUrl = imageUrl;
         mCategory = category;
+        mDate = new Date();
     }
 
     public int getId() {
@@ -36,14 +34,6 @@ public class Expense {
         mName = name;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
-    }
-
     public Double getmPrice() {
         return mPrice;
     }
@@ -58,5 +48,13 @@ public class Expense {
 
     public void setmCategory(Category mCategory) {
         this.mCategory = mCategory;
+    }
+
+    public Date getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(Date mDate) {
+        this.mDate = mDate;
     }
 }

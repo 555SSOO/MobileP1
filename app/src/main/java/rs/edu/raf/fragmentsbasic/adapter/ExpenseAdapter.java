@@ -3,12 +3,11 @@ package rs.edu.raf.fragmentsbasic.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -39,8 +38,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
     @Override
     public void onBindViewHolder(@NonNull ExpenseHolder holder, int position) {
         Expense expense = mDataSet.get(position);
-        Picasso.get().load(expense.getImageUrl()).into(holder.avatarImage);
-        holder.text.setText(expense.getName());
+        holder.text.setText(String.format("%s\n%s\n%s", expense.getName(), expense.getmCategory().getmName(), expense.getmPrice().toString()));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(expense.getmDate());
+        holder.date.setText(String.format("%s/%s/%s", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
     }
 
     @Override
@@ -58,30 +59,32 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
 
     public class ExpenseHolder extends RecyclerView.ViewHolder {
 
-        ImageView avatarImage;
-        ImageView closeImge;
+        Button detailsButton;
+        Button removeButton;
         TextView text;
+        TextView date;
 
         public ExpenseHolder(@NonNull View itemView) {
             super(itemView);
 
             text = itemView.findViewById(R.id.tv_list_item);
+            date = itemView.findViewById(R.id.tv_list_item_date);
 
-            avatarImage = itemView.findViewById(R.id.iv_list_item);
-            avatarImage.setOnClickListener(new View.OnClickListener() {
+            detailsButton = itemView.findViewById(R.id.btn_list_item_details);
+            detailsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION){
                         if (mOnImageClickCallback != null) {
-                            mOnImageClickCallback.onImageClick();
+                            mOnImageClickCallback.onImageClick(position);
                         }
                     }
                 }
             });
 
-            closeImge = itemView.findViewById(R.id.iv_list_item_remove);
-            closeImge.setOnClickListener(new View.OnClickListener() {
+            removeButton = itemView.findViewById(R.id.btn_list_item_remove);
+            removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -110,6 +113,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
 
     //Callback we use when user click on avatar avatarImage
     public interface OnImageClickCallback {
-        void onImageClick();
+        void onImageClick(int position);
     }
 }

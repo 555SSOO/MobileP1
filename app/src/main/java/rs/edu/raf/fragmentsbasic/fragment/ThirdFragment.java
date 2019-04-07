@@ -36,28 +36,17 @@ public class ThirdFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
 
-        EditText editText = view.findViewById(R.id.et_fragment_second_filter);
-        Button button = view.findViewById(R.id.btn_fragment_second);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String filter = editText.getText().toString();
-                viewModel.setFilter(filter);
-            }
-        });
-
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_second);
         GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         mExpenseAdapter = new ExpenseAdapter();
 
-        mExpenseAdapter.setOnImageClickCallback(new ExpenseAdapter.OnImageClickCallback() {
-            @Override
-            public void onImageClick() {
-                Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        mExpenseAdapter.setOnImageClickCallback(new ExpenseAdapter.OnImageClickCallback() {
+//            @Override
+//            public void onImageClick() {
+//                Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         mExpenseAdapter.setOnItemRemoveCallback(new ExpenseAdapter.OnItemRemoveCallback() {
             @Override
