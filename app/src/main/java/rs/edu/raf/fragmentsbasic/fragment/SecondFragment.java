@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import rs.edu.raf.fragmentsbasic.R;
 import rs.edu.raf.fragmentsbasic.activity.DetailActivity;
+import rs.edu.raf.fragmentsbasic.activity.MainActivity;
 import rs.edu.raf.fragmentsbasic.adapter.ExpenseAdapter;
 import rs.edu.raf.fragmentsbasic.model.Category;
 import rs.edu.raf.fragmentsbasic.model.Expense;
@@ -81,12 +82,12 @@ public class SecondFragment extends Fragment {
 
         mExpenseAdapter.setOnImageClickCallback(new ExpenseAdapter.OnImageClickCallback() {
             @Override
-            public void onImageClick(int position) {
+            public void onImageClick(int id) {
 
+                DetailActivity.setmViewModel(viewModel);
                 Intent intent = new Intent(SecondFragment.this.getContext(), DetailActivity.class);
-                intent.putExtra("id", position);
+                intent.putExtra("id", String.valueOf(id));
                 startActivity(intent);
-
 
                 Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
             }
@@ -94,8 +95,10 @@ public class SecondFragment extends Fragment {
 
         mExpenseAdapter.setOnItemRemoveCallback(new ExpenseAdapter.OnItemRemoveCallback() {
             @Override
-            public void onItemRemove(int position) {
-                Toast.makeText(getContext(), "REMOVE EXPENSE ON POSITION " + position, Toast.LENGTH_SHORT).show();
+            public void onItemRemove(int id) {
+
+                viewModel.removeExpense(id);
+                Toast.makeText(getContext(), "Removing expense..", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -9,6 +9,7 @@ public class Expense {
     private Double mPrice;
     private Category mCategory;
     private Date mDate;
+    private String mImageUrl;
 
     public Expense(int id, String name, Double price, Category category) {
         mId = id;
@@ -16,6 +17,7 @@ public class Expense {
         mPrice = price;
         mCategory = category;
         mDate = new Date();
+        mImageUrl = "https://picsum.photos/200/200?image=" + id % 100;
     }
 
     public int getId() {
@@ -57,4 +59,13 @@ public class Expense {
     public void setmDate(Date mDate) {
         this.mDate = mDate;
     }
+
+    public String getmImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setmImageUrl(String mImageUrl) {
+        this.mImageUrl = mImageUrl;
+    }
+
 }

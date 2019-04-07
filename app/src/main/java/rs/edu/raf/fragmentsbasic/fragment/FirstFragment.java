@@ -44,7 +44,7 @@ public class FirstFragment extends Fragment {
             String name = expenseNameET.getText().toString();
             Double price = Double.parseDouble(priceET.getText().toString());
             Category category = (Category) mCategorySpinner.getSelectedItem();
-
+            category.setmSum(category.getmSum() + price);
             Expense expense = new Expense(Util.generateId(), name, price, category);
             mViewModel.addExpense(expense);
         });

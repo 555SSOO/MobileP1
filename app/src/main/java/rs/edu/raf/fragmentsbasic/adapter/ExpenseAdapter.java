@@ -42,6 +42,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(expense.getmDate());
         holder.date.setText(String.format("%s/%s/%s", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
+        holder.id = expense.getId();
     }
 
     @Override
@@ -63,6 +64,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
         Button removeButton;
         TextView text;
         TextView date;
+        int id;
 
         public ExpenseHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,7 +79,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION){
                         if (mOnImageClickCallback != null) {
-                            mOnImageClickCallback.onImageClick(position);
+                            mOnImageClickCallback.onImageClick(id);
                         }
                     }
                 }
@@ -90,7 +92,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION){
                         if (mOnItemRemoveCallback != null) {
-                            mOnItemRemoveCallback.onItemRemove(position);
+                            mOnItemRemoveCallback.onItemRemove(id);
                         }
                     }
                 }
@@ -108,11 +110,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
 
     // Callback we use when user clicks on remove
     public interface OnItemRemoveCallback {
-        void onItemRemove(int position);
+        void onItemRemove(int id);
     }
 
     //Callback we use when user click on avatar avatarImage
     public interface OnImageClickCallback {
-        void onImageClick(int position);
+        void onImageClick(int id);
     }
 }

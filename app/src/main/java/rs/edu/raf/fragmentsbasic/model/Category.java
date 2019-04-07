@@ -4,6 +4,7 @@ public class Category {
 
     private int mId;
     private String mName;
+    private Double mSum = 0.0;
 
     public Category(int id, String name) {
         mId = id;
@@ -29,5 +30,13 @@ public class Category {
     @Override
     public String toString(){
         return this.mName;
+    }
+
+    public Double getmSum() {
+        return mSum;
+    }
+
+    public void setmSum(Double mSum) {
+        this.mSum = mSum;
     }
 }

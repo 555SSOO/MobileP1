@@ -35,6 +35,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         Category category = mDataSet.get(position);
         holder.text.setText(category.getmName());
+        holder.price.setText(category.getmSum().toString());
     }
 
     @Override
@@ -53,10 +54,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public class CategoryHolder extends RecyclerView.ViewHolder {
 
         TextView text;
+        TextView price;
 
         public CategoryHolder(@NonNull View itemView) {
             super(itemView);
             text = itemView.findViewById(R.id.tv_category_list_item);
+            price = itemView.findViewById(R.id.tv_category_price_list_item);
         }
     }
 }

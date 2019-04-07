@@ -4,58 +4,45 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import rs.edu.raf.fragmentsbasic.R;
-import rs.edu.raf.fragmentsbasic.adapter.ExpenseAdapter;
+import rs.edu.raf.fragmentsbasic.adapter.CategoryAdapter;
+import rs.edu.raf.fragmentsbasic.model.Category;
 import rs.edu.raf.fragmentsbasic.model.Expense;
 import rs.edu.raf.fragmentsbasic.viewmodel.MainViewModel;
 
+import static java.util.stream.Collectors.groupingBy;
+
 public class ThirdFragment extends Fragment {
 
-    private MainViewModel viewModel;
-    private ExpenseAdapter mExpenseAdapter;
+    private MainViewModel mViewModel;
+    private CategoryAdapter mAdapter;
 
-    public static ThirdFragment newInstance() {
-        return new ThirdFragment();
+    public static FourthFragment newInstance() {
+        return new FourthFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_second, container, false);
+        View view = inflater.inflate(R.layout.fragment_fourth, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_second);
-        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        mExpenseAdapter = new ExpenseAdapter();
-
-//        mExpenseAdapter.setOnImageClickCallback(new ExpenseAdapter.OnImageClickCallback() {
-//            @Override
-//            public void onImageClick() {
-//                Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        mExpenseAdapter.setOnItemRemoveCallback(new ExpenseAdapter.OnItemRemoveCallback() {
-            @Override
-            public void onItemRemove(int position) {
-                Toast.makeText(getContext(), "REMOVE EXPENSE ON POSITION " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        recyclerView.setAdapter(mExpenseAdapter);
+        RecyclerView recycler = view.findViewById(R.id.rv_category_list);
+        LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
+        recycler.setLayoutManager(manager);
+        mAdapter = new CategoryAdapter();
+        recycler.setAdapter(mAdapter);
 
         return view;
     }
@@ -64,13 +51,15 @@ public class ThirdFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        viewModel.getExpensesLiveData().observe(getViewLifecycleOwner(),
-                new Observer<List<Expense>>() {
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mViewModel.getCategoriesLiveData().observe(getViewLifecycleOwner(),
+                new Observer<List<Category>>() {
                     @Override
-                    public void onChanged(List<Expense> expenses) {
-                        mExpenseAdapter.setData(expenses);
+                    public void onChanged(List<Category> categories) {
+                        mAdapter.setData(categories);
+                        Toast.makeText(ThirdFragment.this.getContext(), categories.size()+"", Toast.LENGTH_SHORT).show();
                     }
                 });
+
     }
 }

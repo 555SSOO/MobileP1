@@ -34,10 +34,11 @@ public class MainViewModel extends ViewModel {
         for (int i = 0; i < 5; i++) {
             mCategoryList.add(new Category(Util.generateId(), "Category " + i));
         }
-        mExpensesLiveData.setValue(mExpenseList);
+        mCategoryLiveData.setValue(mCategoryList);
 
         // Add dummy expenses
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
+            mCategoryList.get(2).setmSum(mCategoryList.get(2).getmSum() + (double) i);
             mExpenseList.add(new Expense(Util.generateId(), "Expense " + i, (double) i, mCategoryList.get(2)));
         }
         mExpensesLiveData.setValue(mExpenseList);
@@ -56,6 +57,25 @@ public class MainViewModel extends ViewModel {
 
     public void addExpense(Expense expense) {
         mExpenseList.add(expense);
+        mExpensesLiveData.setValue(mExpenseList);
+    }
+
+    public Expense getExpense(int id) {
+        for(Expense expense : mExpenseList){
+            if(expense.getId() == id) return expense;
+        }
+        return null;
+    }
+
+    public void removeExpense(int id) {
+        Expense expense;
+        for(int i = 0; i < mExpenseList.size(); i++){
+            expense = mExpenseList.get(i);
+            if (expense.getId() == id) {
+                mExpenseList.remove(expense);
+                break;
+            }
+        }
         mExpensesLiveData.setValue(mExpenseList);
     }
 
