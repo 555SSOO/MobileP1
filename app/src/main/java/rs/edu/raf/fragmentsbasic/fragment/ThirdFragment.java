@@ -1,6 +1,7 @@
 package rs.edu.raf.fragmentsbasic.fragment;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,11 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,7 +36,7 @@ import rs.edu.raf.fragmentsbasic.viewmodel.MainViewModel;
 public class ThirdFragment extends Fragment {
 
     private MainViewModel mViewModel;
-    private CategoryPriceAdapter mAdapter;
+    private CategoryPriceAdapter categoryPriceAdapter;
     private TextView textView;
     private PieChart pieChart;
 
@@ -62,8 +65,8 @@ public class ThirdFragment extends Fragment {
         RecyclerView recycler = view.findViewById(R.id.rv_category_list_third);
         LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
         recycler.setLayoutManager(manager);
-        mAdapter = new CategoryPriceAdapter();
-        recycler.setAdapter(mAdapter);
+        categoryPriceAdapter = new CategoryPriceAdapter();
+        recycler.setAdapter(categoryPriceAdapter);
 
         return view;
     }
@@ -77,13 +80,22 @@ public class ThirdFragment extends Fragment {
                 new Observer<List<Category>>() {
                     @Override
                     public void onChanged(List<Category> categories) {
-                        mAdapter.setData(categories);
-
 
                         ArrayList<PieEntry> yValues = new ArrayList<>();
-                        for(Category category : categories){
-                            yValues.add(new PieEntry(category.getmSum().floatValue(),category.getmName()));
-                        }
+
+                        mViewModel.getmCategorySumLiveData().observe(ThirdFragment.this, new Observer<Map<Category, Double>>() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onChanged(@Nullable Map<Category, Double> categorySums){
+
+                                categoryPriceAdapter.setData(categories, categorySums);
+                                yValues.clear();
+                                categorySums.forEach((category, sum) -> {
+                                    yValues.add(new PieEntry(sum.floatValue(),category.getmName()));
+                                });
+                                textView.setText("Ukupno " + categorySums.values().stream().reduce( 0.0, Double::sum));
+                            }
+                        });
 
                         PieDataSet dataSet = new PieDataSet(yValues, "Categories");
                         dataSet.setSliceSpace(3f);
@@ -94,12 +106,7 @@ public class ThirdFragment extends Fragment {
                         pieData.setValueTextColor(Color.YELLOW);
                         pieChart.setData(pieData);
 
-                        Double sum = 0.0;
-                        for(Category category:categories){
-                            sum += category.getmSum();
-                        }
-                        textView.setText("Ukupno " + sum);
-                        Toast.makeText(ThirdFragment.this.getContext(), "UPDATED 3", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ThirdFragment.this.getContext(), "UPDATED 3", Toast.LENGTH_SHORT).show();
                     }
                 });
 

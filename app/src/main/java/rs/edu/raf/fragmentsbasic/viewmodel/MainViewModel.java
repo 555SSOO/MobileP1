@@ -1,8 +1,14 @@
 package rs.edu.raf.fragmentsbasic.viewmodel;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -11,10 +17,13 @@ import rs.edu.raf.fragmentsbasic.model.Category;
 import rs.edu.raf.fragmentsbasic.model.Expense;
 import rs.edu.raf.fragmentsbasic.util.Util;
 
+import static java.util.stream.Collectors.summingDouble;
+
 public class MainViewModel extends ViewModel {
 
     private MutableLiveData<List<Expense>> mExpensesLiveData;
     private LiveData<Integer> mExpenseCountLiveData;
+    private LiveData<Map<Category, Double>> mCategorySumLiveData;
     private List<Expense> mExpenseList;
 
     private MutableLiveData<List<Category>> mCategoryLiveData;
@@ -38,13 +47,26 @@ public class MainViewModel extends ViewModel {
 
         // Add dummy expenses
         for (int i = 0; i < 10; i++) {
-            mCategoryList.get(2).setmSum(mCategoryList.get(2).getmSum() + (double) i);
+//            mCategoryList.get(2).setmSum(mCategoryList.get(2).getmSum() + (double) i);
             mExpenseList.add(new Expense(Util.generateId(), "Expense " + i, (double) i, mCategoryList.get(2)));
         }
         mExpensesLiveData.setValue(mExpenseList);
 
         // Populate expenses count live data
         mExpenseCountLiveData = Transformations.map(mExpensesLiveData, List::size);
+
+        // Populate sum of categories live data
+        mCategorySumLiveData = Transformations.map(mExpensesLiveData,
+                new Function<List<Expense>, Map<Category, Double>>() {
+                    @Override
+                    @TargetApi(Build.VERSION_CODES.N)
+                    public Map<Category, Double> apply(List<Expense> input) {
+                        return input.stream().collect(
+                                Collectors.groupingBy(Expense::getmCategory, summingDouble(Expense::getmPrice))
+                        );
+                    }
+                }
+        );
     }
 
     public MutableLiveData<List<Expense>> getExpensesLiveData() {
@@ -76,16 +98,6 @@ public class MainViewModel extends ViewModel {
                 break;
             }
         }
-
-        expense.getmCategory().setmSum(expense.getmCategory().getmSum() - expense.getmPrice());
-        mCategoryLiveData.setValue(mCategoryList);
-
-//        Category category = new Category(expense.getmCategory().getmId(), expense.getName());
-//        category.setmSum(expense.getmCategory().getmSum() - expense.getmPrice());
-//        addCategory(category);
-//        removeCategory(expense.getmCategory());
-//        mCategoryLiveData.setValue(mCategoryList);
-
         mExpenseList.remove(expense);
         mExpensesLiveData.setValue(mExpenseList);
     }
@@ -124,5 +136,9 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<Integer> getExpenseCountLiveData() {
         return mExpenseCountLiveData;
+    }
+
+    public LiveData<Map<Category, Double>> getmCategorySumLiveData() {
+        return mCategorySumLiveData;
     }
 }
