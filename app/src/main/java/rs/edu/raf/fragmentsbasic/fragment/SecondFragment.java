@@ -1,6 +1,8 @@
 package rs.edu.raf.fragmentsbasic.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -84,10 +87,20 @@ public class SecondFragment extends Fragment {
             @Override
             public void onImageClick(int id) {
 
-                DetailActivity.setmViewModel(viewModel);
+                viewModel.getExpensesLiveData().observe(getViewLifecycleOwner(),
+                        new Observer<List<Expense>>() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onChanged(List<Expense> expenses) {
+                                DetailActivity.setExpense(expenses.stream().filter(expense -> id == expense.getId()).findFirst());
+                            }
+                        });
+
+                //DetailActivity.setmViewModel(viewModel);
+
                 Intent intent = new Intent(SecondFragment.this.getContext(), DetailActivity.class);
                 intent.putExtra("id", String.valueOf(id));
-                startActivity(intent);
+                startActivityForResult(intent, 1);
 
                 Toast.makeText(getContext(), "OPEN NEW ACTIVITY", Toast.LENGTH_SHORT).show();
             }
@@ -129,5 +142,18 @@ public class SecondFragment extends Fragment {
 
                     mCategorySpinner.setAdapter(adapter);
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result=data.getStringExtra("result");
+                viewModel.removeExpense(Integer.valueOf(result));
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                // Just closed
+            }
+        }
     }
 }
